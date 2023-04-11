@@ -1,3 +1,6 @@
+const DataBase = require("./DataBase");
+database = new DataBase();
+
 const post = async (url, params) => {
     const response = await fetch(url, {
         method: 'POST',
@@ -25,8 +28,9 @@ const post = async (url, params) => {
   
 
 class Bot{
-  CHAT_ID = -877863059;
-  BOT_TOKEN = "5542267435:AAGtcdeY1bZUqYhHY0xRpBf37i76h9kb34s";
+  CHAT_ID = -928293632;
+  //BOT_TOKEN = "5993615271:AAEavGljVlSE9s4FB7TVSwEzK-Zwiu9ZRQ0"; //Minato
+  BOT_TOKEN = "5542267435:AAGtcdeY1bZUqYhHY0xRpBf37i76h9kb34s";//Mina
 
 
     constructor(){
@@ -48,17 +52,18 @@ class Bot{
 
     getUpdates(){
       (async () => {
+        console.log("this.offset", this.offset);
         const data = await post('https://api.telegram.org/bot'+this.BOT_TOKEN+'/getUpdates', {
           allowed_updates: ["message", "edited_channel_post"],
-          offset: this.offset,
+          offset: this.offset +1,
           timeout:3
         })
       
         console.log(JSON.stringify(data))
         if(data.result){
           data.result.forEach(item => {
-            if(item.text){
-              this.solveMessage(item.text);
+            if(item.message.text){
+              this.solveMessage(item.message);
             }
             if(this.offset < item.update_id){
               this.offset = item.update_id;
@@ -68,8 +73,13 @@ class Bot{
       })()
     }
 
-    solveMessage(){
-      
+    solveMessage(item){
+      console.log("solveMessage", JSON.stringify(item));
+      if (item.text == "/nghisang"){
+        let date = new Date();
+        let dateStr = date.toISOString().substring(0, 10);
+        database.insertDatabase(item.from.username, dateStr, 1);
+      }
     }
 
     checkNewDay(){
