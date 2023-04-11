@@ -75,11 +75,23 @@ class Bot{
 
     solveMessage(item){
       console.log("solveMessage", JSON.stringify(item));
-      if (item.text == "/nghisang"){
-        let date = new Date();
-        let dateStr = date.toISOString().substring(0, 10);
-        database.insertDatabase(item.from.username, dateStr, 1);
+      switch(item.text){
+        case "/nghisang":
+          {
+            let date = new Date();
+            let dateStr = date.toISOString().substring(0, 10);
+            database.insertDatabase(item.from.username, dateStr, 1);
+            break;
+
+          }
+        case "/tongketdimuon":{
+          let result = database.getAllLateness();
+          JSON.stringify("solveMessage", result);
+          break;
+        }
       }
+        
+      
     }
 
     checkNewDay(){
