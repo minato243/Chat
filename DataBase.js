@@ -31,17 +31,19 @@ const createTcpPool = async config => {
 class DataBase{
     constructor(){
         createTcpPool();
+        var con = mysql.createConnection({
+          host: HOST_IP,
+          user: USER_NAME,
+          password: PASSWORD,
+          database: DEFAULT_DB
+        });
+        this.con = con;
     }
 
     insertDatabase(userId, dateTime, type){
       console.log("insertDatabase", userId, dateTime, type);
-      var con = mysql.createConnection({
-        host: HOST_IP,
-        user: USER_NAME,
-        password: PASSWORD,
-        database: DEFAULT_DB
-      });
-
+      
+      let con = this.con;
       con.connect(function(err) {
         if (err) throw err;
         console.log("Connected!");
@@ -53,6 +55,39 @@ class DataBase{
         });
       });
     }
+
+    getLatenessToday(){
+      console.log("getLatenessToday");
+      let con2 = this.con;
+      con.connect(function(err) {
+        if (err) throw err;
+        console.log("Connected!");
+        let date = new Date();
+        let dateStr = date.toISOString().substring(0, 10);
+        var sql = `Select * from Lateness where day = "`+ dateStr+`"`;
+        console.log(sql);
+        con2.query(sql, function (err, result) {
+          if (err) throw err;
+          console.log("Result: " + JSON.stringify(result));
+        })
+      })  
+    };
+
+    getLatenessBetween(startDate, endDate){
+      console.log("getLatenessBetween", startDate, endDate);
+      let con = this.con;
+      con.connect(function(err) {
+        if (err) throw err;
+        console.log("Connected!");
+        var sql = `Select userId, count(day) as num from Lateness where day >= "`+ startDate+`" and day <="`+endDate+`" group by userId`;
+        console.log(sql);
+        con.query(sql, function (err, result) {
+          if (err) throw err;
+          console.log("Result: " + JSON.stringify(result));
+        });
+      });
+    };
 };
+
 
 module.exports = DataBase;
