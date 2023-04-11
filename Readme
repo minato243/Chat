@@ -1,0 +1,8 @@
+Setup: 
+Install nodejs: https://nodejs.org/en
+
+Clone this project: git clone https://github.com/minato243/Chat.git
+Install node_modules: npm install
+Change data base config in DataBase.js
+Run:
+node app
