@@ -75,7 +75,10 @@ class Bot{
 
     solveMessage(item){
       console.log("solveMessage", JSON.stringify(item));
-      switch(item.text){
+      let params = item.text.split(" ");
+      let command = params[0];
+      console.log(commnad);
+      switch(command){
         case "/nghisang":
           {
             let date = new Date();
@@ -89,6 +92,20 @@ class Bot{
           JSON.stringify("solveMessage", result);
           break;
         }
+
+        case "muon":
+          {
+            break;
+          }
+        case "nghisang":
+          break;
+
+        case "nghichieu":
+          break;
+        case "nghifull":
+          break;
+        case "aidimuonhomnay":
+          break;
       }
         
       
