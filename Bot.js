@@ -77,7 +77,7 @@ class Bot{
       console.log("solveMessage", JSON.stringify(item));
       let params = item.text.split(" ");
       let command = params[0];
-      console.log(commnad);
+      console.log(command);
       switch(command){
         case "/nghisang":
           {
@@ -93,8 +93,9 @@ class Bot{
           break;
         }
 
-        case "muon":
+        case "/muon":
           {
+            let result = database.insertLateness(item.from.username);
             break;
           }
         case "nghisang":

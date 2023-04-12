@@ -22,13 +22,15 @@ const createQuerry = async (conn, q, params) => new Promise(
   });
 
 class DataBase {
+  CONFIG = {
+    host: HOST_IP,
+    user: USER_NAME,
+    password: PASSWORD,
+    database: DEFAULT_DB
+  };
+
   constructor() {
-    var con = mysql.createConnection({
-      host: HOST_IP,
-      user: USER_NAME,
-      password: PASSWORD,
-      database: DEFAULT_DB
-    });
+    var con = mysql.createConnection(this.CONFIG);
     this.con = con;
   }
 
@@ -36,12 +38,12 @@ class DataBase {
     console.log("insertDatabase", userId, dateTime, type);
 
     let con = this.con;
-    con.onnect(function (err) {
+    con.connect(function (err) {
       if (err) throw err;
       console.log("Connected!");
       var sql = `insert into absent values("` + userId + `", "` + dateTime + `", +` + type + `)`;
       console.log(sql);
-      con.uery(sql, function (err, result) {
+      con.query(sql, function (err, result) {
         if (err) throw err;
         console.log("1 record inserted");
       });
@@ -93,6 +95,17 @@ class DataBase {
     const result = await createQuerry(conn, sql);
     console.log("getAllLateness", JSON.stringify(result));
     return result;
+  };
+
+  async insertLateness(userId) {
+    console.log("insertLateness");
+    const conn = await connect(this.CONFIG);
+    let date = new Date();
+    let dateStr = date.toISOString().substring(0, 10);
+    var sql = `Insert into Lateness values("${userId}", "${dateStr}")`;
+    console.log("insertLateness", sql);
+    const result = await createQuerry(conn, sql);
+    console.log("insertLateness", JSON.stringify(result));
   }
 
 };
